@@ -171,7 +171,12 @@ action :create do
 
   service "telegraf_#{new_resource.name}" do
     service_name 'telegraf'
-    action [:enable, :start]
+    action :nothing
+  end
+
+  log "delay starting of telegraf until configured" do
+    notifies :enabled, "service[telegraf#{new_resource.name}]", :delayed
+    notifies :start,   "service[telegraf#{new_resource.name}]", :delayed
   end
 end
 
